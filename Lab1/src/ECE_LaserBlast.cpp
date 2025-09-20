@@ -2,32 +2,37 @@
 #include "utils.hpp"
 #include <iostream>
 
-ECE_LaserBlast::ECE_LaserBlast()
+ECE_LaserBlast::ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, bool isFriendly)
 {
-    if (textureLoaded == false)
-    {
-        if (!texture.loadFromFile("graphics/Laser_blast.png"))
-        {
-            std::cout << "Failed to load texture\n";
-        }
-        textureLoaded = true;
-    }
     setTexture(texture);
-    // setPosition(xLen / 2, 100);
-    setScale(0.25, 0.25);
-}
-
-void ECE_LaserBlast::fire(float xPos, float yPos)
-{
     setPosition(xPos, yPos);
+    setScale(0.1, 0.1);
     isTraveling = true;
+    isFriendly_ = isFriendly;
+
+    if (!isFriendly_)
+    {
+        setRotation(180);
+    }
 }
 
 void ECE_LaserBlast::propagate()
 {
     if (isTraveling)
     {
-        move(0, -0.2);
+        if (isFriendly_)
+        {
+            move(0, 0.2);
+        }
+        else
+        {
+            move(0, -0.2);
+        }
+
+        if (getPosition().y > bottomBound || getPosition().y < topBound)
+        {
+            isTraveling = false; // mark as finished
+        }
     }
 }
 

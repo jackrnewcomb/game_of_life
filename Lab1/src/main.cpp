@@ -1,5 +1,6 @@
 // Include important C++ libraries here
 #include "Ece_Buzzy.hpp"
+#include "GameController.hpp"
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
 // #include <sstream>
@@ -29,48 +30,11 @@ int main()
     // Show everything we just drew
     window->display();
 
-    // render blank screen
-    sf::Texture textureBlank;
-    textureBlank.loadFromFile("graphics/Blank.png");
-    sf::Sprite spriteBlank;
-    spriteBlank.setTexture(textureBlank);
-
-    // buzzy
-    ECE_Buzzy buzzy = ECE_Buzzy();
-
-    bool gameStarted = false;
+    GameController controller(window);
 
     while (window->isOpen())
     {
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
-            window->close();
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-        {
-            gameStarted = true;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            buzzy.move(-0.2);
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            buzzy.move(0.2);
-        }
-
-        if (gameStarted)
-        {
-            // update window
-            window->clear();
-            window->draw(spriteBlank);
-            window->draw(buzzy);
-            window->display();
-        }
+        controller.update();
     }
 
     return 0;
