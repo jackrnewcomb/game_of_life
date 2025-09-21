@@ -1,4 +1,4 @@
-#include "Ece_Buzzy.hpp"
+#include "ECE_Buzzy.hpp"
 #include "GameController.hpp"
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
