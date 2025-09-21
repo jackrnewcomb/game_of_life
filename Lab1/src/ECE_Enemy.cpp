@@ -53,10 +53,10 @@ bool ECE_Enemy::getSurvivalStatus()
 bool ECE_Enemy::randomBlast()
 {
     // Generate a random number between 0 and 100
-    int randomNum = rand() % 2001;
+    int randomNum = rand() % static_cast<int>(1e6);
 
     // todo: make this more elegant
-    if (randomNum == 2000)
+    if (randomNum == 0)
     {
         return true;
     }
