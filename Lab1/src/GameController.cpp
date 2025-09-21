@@ -90,6 +90,14 @@ void GameController::update()
                 lasers_.emplace_back(textures_["laser"], xPos, yPos, false);
             }
 
+            // Check a lose condition: Has any enemy made it to buzzy?
+            if (enemy->getGlobalBounds().intersects(buzzies_.front().getGlobalBounds()))
+            {
+                // Reset the game
+                isRunning_ = false;
+                gameFinished_ = true;
+            }
+
             ++enemy;
         }
 
@@ -99,21 +107,32 @@ void GameController::update()
             // Propagate laser movements
             laser->propagate();
 
+            bool hit = false;
+
             // For each enemy in the active enemies_ list...
             for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
             {
                 // If the laser intersects with the enemy, and originated from buzzy...
                 if (laser->getGlobalBounds().intersects(enemy->getGlobalBounds()) && laser->isFriendly())
                 {
-                    // Destroy the enemy
+                    // Destroy the enemy and the laser
                     enemy = enemies_.erase(enemy);
                     laser = lasers_.erase(laser);
+                    hit = true;
+                    break;
                 }
                 // Otherwise move on to the next enemy in enemies_
                 else
                 {
                     ++enemy;
                 }
+            }
+
+            // If we've hit something and destroyed the laser, we can't reference this laser anymore with introducing
+            // bugs later. Move on to the next laser
+            if (hit)
+            {
+                continue;
             }
 
             // Now we check if the laser hit buzzy
