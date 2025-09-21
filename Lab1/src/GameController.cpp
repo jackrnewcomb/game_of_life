@@ -7,45 +7,14 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
     // load and store in the map
     textures_["blank"].loadFromFile("graphics/Blank.png");
     textures_["start"].loadFromFile("graphics/Start_Screen.png");
-    textures_["laser"].loadFromFile("graphics/Laser_blast2.png");
+    textures_["laser"].loadFromFile("graphics/Laser_blast.png");
     textures_["bulldog"].loadFromFile("graphics/bulldog.png");
     textures_["tiger"].loadFromFile("graphics/clemson_tigers.png");
 
     // set initial background
     background_.setTexture(textures_["blank"]);
 
-    // initialize enemies
-    int rows = 3;                                                  // ?
-    int enemiesPerRow = (xLen / textures_["bulldog"].getSize().x); // just testing
-    bool enemyType = false;                                        // flag to flip enemy types
-    MarchDirection marchType = MarchDirection::Left;
-
-    for (int row = 0; row < rows; row++)
-    {
-        for (int enemy = 0; enemy < enemiesPerRow; enemy++)
-        {
-            enemyType ? enemies_.emplace_back(textures_["bulldog"], textures_["bulldog"].getSize().x * enemy,
-                                              yLen - textures_["bulldog"].getSize().y * row, marchType)
-                      : enemies_.emplace_back(textures_["tiger"], textures_["tiger"].getSize().x * enemy,
-                                              yLen - textures_["tiger"].getSize().y * row, marchType);
-            enemyType = !enemyType;
-        }
-
-        if (marchType == MarchDirection::Left)
-        {
-            marchType = MarchDirection::Right;
-        }
-        else
-        {
-            marchType = MarchDirection::Left;
-        }
-    }
-
-    font_.loadFromFile("fonts/comic.ttf");
-    gameOver_.setFont(font_);                  // Set the loaded font
-    gameOver_.setCharacterSize(24);            // Set the character size in pixels
-    gameOver_.setFillColor(sf::Color::White);  // Set the text color
-    gameOver_.setPosition(xLen / 2, yLen / 2); // Set the position on the window
+    addEnemies();
 }
 
 bool GameController::update()
@@ -124,7 +93,6 @@ bool GameController::update()
 
             if (laser->getGlobalBounds().intersects(buzzy_.getGlobalBounds()) && !laser->isFriendly())
             {
-                gameOver_.setString("You lost. Press enter to play again.");
                 isRunning_ = false;
                 gameFinished_ = true;
             }
@@ -137,20 +105,13 @@ bool GameController::update()
 
         if (enemies_.empty())
         {
-            gameOver_.setString("You won!! Press enter to play again.");
             isRunning_ = false;
             gameFinished_ = true;
         }
 
         redraw();
     }
-    // else if (gameFinished_)
-    //{
-    //     window_->clear();
-    //     window_->draw(background_);
-    //     window_->draw(gameOver_);
-    //     window_->display();
-    // }
+
     return true;
 }
 
@@ -175,4 +136,34 @@ void GameController::redraw()
 bool GameController::isGameFinished()
 {
     return gameFinished_;
+}
+
+void GameController::addEnemies()
+{
+    // initialize enemies
+    int rows = 3;                                                  // ?
+    int enemiesPerRow = (xLen / textures_["bulldog"].getSize().x); // just testing
+    bool enemyType = false;                                        // flag to flip enemy types
+    MarchDirection marchType = MarchDirection::Left;
+
+    for (int row = 0; row < rows; row++)
+    {
+        for (int enemy = 0; enemy < enemiesPerRow; enemy++)
+        {
+            enemyType ? enemies_.emplace_back(textures_["bulldog"], textures_["bulldog"].getSize().x * enemy,
+                                              yLen - textures_["bulldog"].getSize().y * row, marchType)
+                      : enemies_.emplace_back(textures_["tiger"], textures_["tiger"].getSize().x * enemy,
+                                              yLen - textures_["tiger"].getSize().y * row, marchType);
+            enemyType = !enemyType;
+        }
+
+        if (marchType == MarchDirection::Left)
+        {
+            marchType = MarchDirection::Right;
+        }
+        else
+        {
+            marchType = MarchDirection::Left;
+        }
+    }
 }

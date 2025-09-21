@@ -1,3 +1,15 @@
+/*
+Author: Jack Newcomb
+Class: ECE6122
+Last Date Modified: 9/21/2025
+
+Description:
+
+Provides an sf::Sprite inheritor for laser blasts, which includes travel propagation logic, decision-making for
+collision, etc.
+
+*/
+
 #pragma once
 
 #include <SFML/Graphics.hpp>

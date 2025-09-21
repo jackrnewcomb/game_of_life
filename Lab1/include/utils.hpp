@@ -1,3 +1,15 @@
+/*
+Author: Jack Newcomb
+Class: ECE6122
+Last Date Modified: 9/21/2025
+
+Description:
+
+Provides utility constants and enums for use throughout the codebase. For example, const information about window size,
+laser travel speeds, etc.
+
+*/
+
 #pragma once
 
 #include <SFML/Graphics.hpp>

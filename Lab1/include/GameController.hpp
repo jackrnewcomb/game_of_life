@@ -1,3 +1,15 @@
+/*
+Author: Jack Newcomb
+Class: ECE6122
+Last Date Modified: 9/21/2025
+
+Description:
+
+Provides a "controller" for each game, delegating authority away from main. The GameController is responsible for
+updating all entities in the game on a frame-to-frame basis.
+
+*/
+
 #pragma once
 
 #include "ECE_Buzzy.hpp"
@@ -14,6 +26,7 @@ class GameController
     bool update();
     void redraw();
     bool isGameFinished();
+    void addEnemies();
 
   private:
     bool spacePressedRecently_{false};
@@ -24,7 +37,5 @@ class GameController
     std::list<ECE_LaserBlast> lasers_;
     sf::Sprite background_;
     std::list<ECE_Enemy> enemies_;
-    sf::Text gameOver_;
     bool gameFinished_{false};
-    sf::Font font_;
 };
