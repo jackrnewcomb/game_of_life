@@ -15,6 +15,7 @@ class GameController
     void redraw();
 
   private:
+    bool spacePressedRecently_{false};
     bool isRunning_{false};
     std::shared_ptr<sf::RenderWindow> window_;
     std::map<std::string, sf::Texture> textures_;

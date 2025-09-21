@@ -1,5 +1,5 @@
 #include "GameController.hpp"
-
+#include <iostream>
 GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
 {
     window_ = window;
@@ -66,27 +66,15 @@ bool GameController::update()
             buzzy_.move(buzzySpeed);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressedRecently_)
         {
+
             auto xPos = buzzy_.getPosition().x + buzzy_.getGlobalBounds().width / 2.0;
             auto yPos = buzzy_.getGlobalBounds().top + buzzy_.getGlobalBounds().height;
             lasers_.emplace_back(textures_["laser"], xPos, yPos, true);
+            std::cout << "Lasers size: " << lasers_.size() << "\n";
         }
-
-        // movement propagations
-        for (auto laser = lasers_.begin(); laser != lasers_.end();)
-        {
-            laser->propagate();
-
-            if (!laser->getTravelStatus())
-            {
-                laser = lasers_.erase(laser);
-            }
-            else
-            {
-                ++laser;
-            }
-        }
+        spacePressedRecently_ = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
         for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
         {
@@ -101,6 +89,33 @@ bool GameController::update()
                 ++enemy;
             }
         }
+
+        // --- Update lasers and handle collisions ---
+        for (auto laser = lasers_.begin(); laser != lasers_.end();)
+        {
+            laser->propagate();
+
+            bool hit = false;
+            for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
+            {
+                if (laser->getGlobalBounds().intersects(enemy->getGlobalBounds()))
+                {
+                    enemy = enemies_.erase(enemy);
+                    hit = true;
+                    break; // laser disappears after hitting first enemy
+                }
+                else
+                {
+                    ++enemy;
+                }
+            }
+
+            if (hit || !laser->getTravelStatus())
+                laser = lasers_.erase(laser);
+            else
+                ++laser;
+        }
+
         redraw();
     }
     return true;
