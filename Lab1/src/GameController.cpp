@@ -100,7 +100,6 @@ void GameController::update()
             laser->propagate();
 
             // For each enemy in the active enemies_ list...
-            bool hit = false;
             for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
             {
                 // If the laser intersects with the enemy, and originated from buzzy...
@@ -108,40 +107,54 @@ void GameController::update()
                 {
                     // Destroy the enemy
                     enemy = enemies_.erase(enemy);
-                    hit = true;
-                    break; // laser disappears after hitting first enemy
+                    laser = lasers_.erase(laser);
                 }
+                // Otherwise move on to the next enemy in enemies_
                 else
                 {
                     ++enemy;
                 }
             }
 
+            // Now we check if the laser hit buzzy
             if (laser->getGlobalBounds().intersects(buzzies_.front().getGlobalBounds()) && !laser->isFriendly())
             {
+                // If this is the case, the game is over. Update isRunning_ and gameFinished_ accordingly
                 isRunning_ = false;
                 gameFinished_ = true;
             }
 
-            if (hit || !laser->isInBounds())
+            // Finally, check if the laser left the bounds of the window. If so we can remove it from the active lasers_
+            // list
+            if (!laser->isInBounds())
+            {
                 laser = lasers_.erase(laser);
+            }
             else
+            {
                 ++laser;
+            }
         }
 
+        // Check the win condition: Are the enemies all gone?
         if (enemies_.empty())
         {
+            // The game is over, update isRunning_ and gameFinished_ accordingly
             isRunning_ = false;
             gameFinished_ = true;
         }
 
+        // Redraw the map with new movements and entity updates
         redraw();
     }
 }
 
 void GameController::redraw()
 {
+    // First clear the previous drawing
     window_->clear();
+
+    // Draw, in order, the background, buzzy, the enemies, and the lasers
     window_->draw(background_);
     window_->draw(buzzies_.front());
 
@@ -154,6 +167,8 @@ void GameController::redraw()
     {
         window_->draw(laser);
     }
+
+    // Display the drawings
     window_->display();
 }
 
@@ -164,23 +179,35 @@ bool GameController::isGameFinished()
 
 void GameController::addEnemies()
 {
-    // initialize enemies
-    int rows = 3;                                                        // ?
-    int enemiesPerRow = (rightBound / textures_["bulldog"].getSize().x); // just testing
-    bool enemyType = false;                                              // flag to flip enemy types
+    // Developer preference based on play-tests
+    int rows = 3;
+
+    // Fill the rows with as many enemies as can fit
+    int enemiesPerRow = (rightBound / textures_["bulldog"].getSize().x);
+
+    // A flag to flip enemy types
+    bool enemyType = false;
+
+    // A marching type enum
     MarchDirection marchType = MarchDirection::Left;
 
+    // For each row...
     for (int row = 0; row < rows; row++)
     {
+        // For each enemy in that row...
         for (int enemy = 0; enemy < enemiesPerRow; enemy++)
         {
+            // A ternary operator that basically says: If the last enemy was a bulldog, make the next enemy a tiger
             enemyType ? enemies_.emplace_back(textures_["bulldog"], textures_["bulldog"].getSize().x * enemy,
                                               bottomBound - textures_["bulldog"].getSize().y * row, marchType)
                       : enemies_.emplace_back(textures_["tiger"], textures_["tiger"].getSize().x * enemy,
                                               bottomBound - textures_["tiger"].getSize().y * row, marchType);
+
+            // Flip the enemy type for the next enemy
             enemyType = !enemyType;
         }
 
+        // Ensures every enemy in a row marches the same direction. Flips march type every row
         if (marchType == MarchDirection::Left)
         {
             marchType = MarchDirection::Right;

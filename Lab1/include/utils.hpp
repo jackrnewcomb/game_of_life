@@ -12,12 +12,23 @@ travel speeds, etc.
 
 #pragma once
 
-const int leftBound = 0;      // The left pixel bound of the window
-const int rightBound = 1152;  // The right pixel bound of the window
-const int topBound = 0;       // The top pixel bound of the window
-const int bottomBound = 1030; // The bottom pixel bound of the window
+// The left pixel bound of the window
+const int leftBound = 0;
 
-const double buzzySpeed = 0.1; // A default speed for buzzy based on play-testing
+// The right pixel bound of the window
+const int rightBound = 1152;
+
+// The top pixel bound of the window
+const int topBound = 0;
+
+// The bottom pixel bound of the window
+const int bottomBound = 1030;
+
+// A default speed for buzzy based on play-testing
+const double buzzySpeed = 0.1;
+
+// The odds of a random blast occuring for an enemy. Based on play-testing
+const int randomBlastProbability = 1e6;
 
 /**
  * @brief Provides enum values for possible enemy marching direction

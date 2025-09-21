@@ -25,7 +25,7 @@ class ECE_Buzzy : public sf::Sprite
 
     /**
      * @brief Defines movement logic for buzzy
-     * @params The movement offset
+     * @param The movement offset
      */
     void move(float offsetX);
 };
