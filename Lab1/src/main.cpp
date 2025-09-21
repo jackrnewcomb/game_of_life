@@ -1,44 +1,40 @@
-// Include important C++ libraries here
 #include "Ece_Buzzy.hpp"
 #include "GameController.hpp"
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
-// #include <sstream>
-//  #include <SFML/Audio.hpp>
 
 int main()
 {
+    // Generate the window. Make it a shared_ptr so the game controller can share ownership
 
-    // Create a video mode object
     sf::VideoMode vm(rightBound, bottomBound); // Dimensions of the Start_Screen.png
 
-    // Create and open a window for the game
     std::shared_ptr<sf::RenderWindow> window =
         std::make_shared<sf::RenderWindow>(vm, "Buzzy Defender", sf::Style::Default);
 
+    // General execution loop. Each iteration represents a playthrough of the game
     while (window->isOpen())
     {
-        // Create a texture to hold a graphic on the GPU
-        sf::Texture textureBackground;
+        // Create the starting screen
+        sf::Texture textureStart;
+        textureStart.loadFromFile("graphics/Start_Screen.png");
+        sf::Sprite startScreen = sf::Sprite(textureStart);
 
-        // Load a graphic into the texture
-        textureBackground.loadFromFile("graphics/Start_Screen.png");
-
-        // Create a sprite
-        sf::Sprite spriteBackground = sf::Sprite(textureBackground);
-
-        // Draw our game scene here
-        window->draw(spriteBackground);
-
-        // Show everything we just drew
+        // Draw and display starting screen
+        window->draw(startScreen);
         window->display();
 
+        // Generate a GameController. This will go out of scope after this play-through is over
         GameController controller(window);
 
+        // Begins the game loop
         bool playing = true;
         while (playing)
         {
+            // Update the GameController, which controls all gameplay logic
             controller.update();
+
+            // Check if the game finished, or the window was closed manually. If so, reset to the starting screen
             if (controller.isGameFinished() || !window->isOpen())
             {
                 playing = false;
