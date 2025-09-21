@@ -14,10 +14,26 @@ collision, etc.
 
 #include <SFML/Graphics.hpp>
 
+/**
+ * @brief Inherits from sf::Sprite to define a custom LaserBlast class
+ */
 class ECE_LaserBlast : public sf::Sprite
 {
   public:
+    /**
+     * @brief Constructor. Sets attributes of the sprite like texture, scale, rotation, etc., along with initializing
+     * members
+     * @param A sf::Texture&
+     * @param The x position of the ECE_LaserBlast
+     * @param The y position of the ECE_LaserBlast
+     * @param A bool describing the originating side of the laser blast (true for Buzzy-aligned, false for
+     * enemy-aligned)
+     */
     ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, bool isFriendly);
+
+    /**
+     * @brief Defines movement logic for the laser blast
+     */
     void propagate();
     bool getTravelStatus();
     bool isFriendly();

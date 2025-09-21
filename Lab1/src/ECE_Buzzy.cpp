@@ -13,7 +13,7 @@ ECE_Buzzy::ECE_Buzzy()
         textureLoaded = true;
     }
     setTexture(texture);
-    setPosition(xLen / 2, 100);
+    setPosition(rightBound / 2, 100);
     setScale(0.25, 0.25);
 }
 

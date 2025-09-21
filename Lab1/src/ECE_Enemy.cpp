@@ -28,7 +28,7 @@ void ECE_Enemy::march()
 
         case MarchDirection::Right:
             move(buzzySpeed / 2, 0);
-            if (pos.x + bounds.width >= xLen)
+            if (pos.x + bounds.width >= rightBound)
             {
                 marchDirection_ = MarchDirection::Up;
             }

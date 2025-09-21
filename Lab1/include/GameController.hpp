@@ -19,23 +19,66 @@ updating all entities in the game on a frame-to-frame basis.
 #include "utils.hpp"
 #include <list>
 
+/**
+ * @brief A class for managing game-play flow and interactions between entities
+ */
 class GameController
 {
   public:
+    /**
+     * @brief Constructor. Initializes members and populates the texture map
+     * @param A pointer to a sf::RenderWindow
+     */
     GameController(std::shared_ptr<sf::RenderWindow> window);
-    bool update();
-    void redraw();
+
+    /**
+     * @brief Generic update loop for gameplay. Handles all entity interactions, and calls relevant movement/laser
+     * firing functions on objects
+     */
+    void update();
+
+    /**
+     * @brief Returns a bool that tracks whether the game has ended
+     * @return True if the game has ended, false otherwise
+     */
     bool isGameFinished();
-    void addEnemies();
 
   private:
+    /**
+     * @brief Called internally by the constructor to propagate the enemies_ list
+     */
+    void addEnemies();
+
+    /**
+     * @brief Redraws the background, entities, and lasers after the update loop has finished propagating movements and
+     * laser firing
+     */
+    void redraw();
+
+    // Used to ensure users can't spam lasers by holding down the space bar
     bool spacePressedRecently_{false};
+
+    // Tracks whether the game is actively running
     bool isRunning_{false};
+
+    // A shared pointer to the window
     std::shared_ptr<sf::RenderWindow> window_;
+
+    // A map of string descriptors to textures. Ensures we don't waste time reloading textures
     std::map<std::string, sf::Texture> textures_;
+
+    // The buzzy entity
     ECE_Buzzy buzzy_;
+
+    // A list of all active lasers
     std::list<ECE_LaserBlast> lasers_;
+
+    // The background sprite
     sf::Sprite background_;
+
+    // A list of all active enemies_
     std::list<ECE_Enemy> enemies_;
+
+    // Tracks whether the game has finished
     bool gameFinished_{false};
 };

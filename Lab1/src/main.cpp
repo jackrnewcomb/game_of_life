@@ -10,7 +10,7 @@ int main()
 {
 
     // Create a video mode object
-    sf::VideoMode vm(xLen, yLen); // Dimensions of the Start_Screen.png
+    sf::VideoMode vm(rightBound, bottomBound); // Dimensions of the Start_Screen.png
 
     // Create and open a window for the game
     std::shared_ptr<sf::RenderWindow> window =

@@ -17,7 +17,7 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
     addEnemies();
 }
 
-bool GameController::update()
+void GameController::update()
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
@@ -47,7 +47,6 @@ bool GameController::update()
             auto xPos = buzzy_.getPosition().x + buzzy_.getGlobalBounds().width / 2.0;
             auto yPos = buzzy_.getGlobalBounds().top + buzzy_.getGlobalBounds().height;
             lasers_.emplace_back(textures_["laser"], xPos, yPos, true);
-            std::cout << "Lasers size: " << lasers_.size() << "\n";
         }
         spacePressedRecently_ = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
@@ -111,8 +110,6 @@ bool GameController::update()
 
         redraw();
     }
-
-    return true;
 }
 
 void GameController::redraw()
@@ -141,9 +138,9 @@ bool GameController::isGameFinished()
 void GameController::addEnemies()
 {
     // initialize enemies
-    int rows = 3;                                                  // ?
-    int enemiesPerRow = (xLen / textures_["bulldog"].getSize().x); // just testing
-    bool enemyType = false;                                        // flag to flip enemy types
+    int rows = 3;                                                        // ?
+    int enemiesPerRow = (rightBound / textures_["bulldog"].getSize().x); // just testing
+    bool enemyType = false;                                              // flag to flip enemy types
     MarchDirection marchType = MarchDirection::Left;
 
     for (int row = 0; row < rows; row++)
@@ -151,9 +148,9 @@ void GameController::addEnemies()
         for (int enemy = 0; enemy < enemiesPerRow; enemy++)
         {
             enemyType ? enemies_.emplace_back(textures_["bulldog"], textures_["bulldog"].getSize().x * enemy,
-                                              yLen - textures_["bulldog"].getSize().y * row, marchType)
+                                              bottomBound - textures_["bulldog"].getSize().y * row, marchType)
                       : enemies_.emplace_back(textures_["tiger"], textures_["tiger"].getSize().x * enemy,
-                                              yLen - textures_["tiger"].getSize().y * row, marchType);
+                                              bottomBound - textures_["tiger"].getSize().y * row, marchType);
             enemyType = !enemyType;
         }
 
