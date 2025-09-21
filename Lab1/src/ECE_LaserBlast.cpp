@@ -40,3 +40,8 @@ bool ECE_LaserBlast::getTravelStatus()
 {
     return isTraveling;
 }
+
+bool ECE_LaserBlast::isFriendly()
+{
+    return isFriendly_;
+}

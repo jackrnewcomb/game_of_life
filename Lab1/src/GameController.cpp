@@ -7,7 +7,7 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
     // load and store in the map
     textures_["blank"].loadFromFile("graphics/Blank.png");
     textures_["start"].loadFromFile("graphics/Start_Screen.png");
-    textures_["laser"].loadFromFile("graphics/Laser_blast.png");
+    textures_["laser"].loadFromFile("graphics/Laser_blast2.png");
     textures_["bulldog"].loadFromFile("graphics/bulldog.png");
     textures_["tiger"].loadFromFile("graphics/clemson_tigers.png");
 
@@ -40,6 +40,12 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
             marchType = MarchDirection::Left;
         }
     }
+
+    font_.loadFromFile("fonts/comic.ttf");
+    gameOver_.setFont(font_);                  // Set the loaded font
+    gameOver_.setCharacterSize(24);            // Set the character size in pixels
+    gameOver_.setFillColor(sf::Color::White);  // Set the text color
+    gameOver_.setPosition(xLen / 2, yLen / 2); // Set the position on the window
 }
 
 bool GameController::update()
@@ -79,6 +85,12 @@ bool GameController::update()
         for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
         {
             enemy->march();
+            if (enemy->randomBlast())
+            {
+                auto xPos = enemy->getPosition().x + enemy->getGlobalBounds().width / 2.0;
+                auto yPos = enemy->getGlobalBounds().top;
+                lasers_.emplace_back(textures_["laser"], xPos, yPos, false);
+            }
 
             if (!enemy->getSurvivalStatus())
             {
@@ -98,7 +110,7 @@ bool GameController::update()
             bool hit = false;
             for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
             {
-                if (laser->getGlobalBounds().intersects(enemy->getGlobalBounds()))
+                if (laser->getGlobalBounds().intersects(enemy->getGlobalBounds()) && laser->isFriendly())
                 {
                     enemy = enemies_.erase(enemy);
                     hit = true;
@@ -110,14 +122,35 @@ bool GameController::update()
                 }
             }
 
+            if (laser->getGlobalBounds().intersects(buzzy_.getGlobalBounds()) && !laser->isFriendly())
+            {
+                gameOver_.setString("You lost. Press enter to play again.");
+                isRunning_ = false;
+                gameFinished_ = true;
+            }
+
             if (hit || !laser->getTravelStatus())
                 laser = lasers_.erase(laser);
             else
                 ++laser;
         }
 
+        if (enemies_.empty())
+        {
+            gameOver_.setString("You won!! Press enter to play again.");
+            isRunning_ = false;
+            gameFinished_ = true;
+        }
+
         redraw();
     }
+    // else if (gameFinished_)
+    //{
+    //     window_->clear();
+    //     window_->draw(background_);
+    //     window_->draw(gameOver_);
+    //     window_->display();
+    // }
     return true;
 }
 
@@ -137,4 +170,9 @@ void GameController::redraw()
         window_->draw(laser);
     }
     window_->display();
+}
+
+bool GameController::isGameFinished()
+{
+    return gameFinished_;
 }

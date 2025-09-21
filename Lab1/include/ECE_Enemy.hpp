@@ -9,6 +9,7 @@ class ECE_Enemy : public sf::Sprite
     ECE_Enemy(sf::Texture &texture, float xPos, float yPos, MarchDirection marchDirection);
     void march();
     bool getSurvivalStatus();
+    bool randomBlast();
 
   private:
     bool isAlive{true};

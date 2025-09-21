@@ -49,3 +49,19 @@ bool ECE_Enemy::getSurvivalStatus()
 {
     return isAlive;
 }
+
+bool ECE_Enemy::randomBlast()
+{
+    // Generate a random number between 0 and 100
+    int randomNum = rand() % 2001;
+
+    // todo: make this more elegant
+    if (randomNum == 2000)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

@@ -13,6 +13,7 @@ class GameController
     GameController(std::shared_ptr<sf::RenderWindow> window);
     bool update();
     void redraw();
+    bool isGameFinished();
 
   private:
     bool spacePressedRecently_{false};
@@ -23,4 +24,7 @@ class GameController
     std::list<ECE_LaserBlast> lasers_;
     sf::Sprite background_;
     std::list<ECE_Enemy> enemies_;
+    sf::Text gameOver_;
+    bool gameFinished_{false};
+    sf::Font font_;
 };

@@ -8,6 +8,7 @@ class ECE_LaserBlast : public sf::Sprite
     ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, bool isFriendly);
     void propagate();
     bool getTravelStatus();
+    bool isFriendly();
 
   private:
     bool isTraveling{false};
