@@ -26,7 +26,7 @@ void ECE_Enemy::march()
     // If we are marching left...
     case MarchDirection::Left:
         // Move left, at half buzzy's speed
-        move(-buzzySpeed / 2, 0);
+        move(-buzzySpeed / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
         if (pos.x <= 0)
@@ -38,7 +38,7 @@ void ECE_Enemy::march()
     // If we are marching right...
     case MarchDirection::Right:
         // Move right, at half buzzy's speed
-        move(buzzySpeed / 2, 0);
+        move(buzzySpeed / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
         if (pos.x + bounds.width >= rightBound)

@@ -59,7 +59,7 @@ void GameController::update()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressedRecently_)
         {
             // Find the ideal x position of the laser (centered at buzzy)
-            auto xPos = buzzies_.front().getPosition().x + buzzies_.front().getGlobalBounds().width / 2.0;
+            auto xPos = buzzies_.front().getPosition().x + buzzies_.front().getGlobalBounds().width / 2.0f;
 
             // Find the ideal y position of the laser (just under buzzy)
             auto yPos = buzzies_.front().getGlobalBounds().top + buzzies_.front().getGlobalBounds().height;
@@ -81,7 +81,7 @@ void GameController::update()
             if (enemy->randomBlast())
             {
                 // Find the ideal x position of the laser (centered at the enemy)
-                auto xPos = enemy->getPosition().x + enemy->getGlobalBounds().width / 2.0;
+                auto xPos = enemy->getPosition().x + enemy->getGlobalBounds().width / 2.0f;
 
                 // Find the ideal y position of the laer (just above the enemy)
                 auto yPos = enemy->getGlobalBounds().top;
@@ -197,11 +197,16 @@ void GameController::addEnemies()
         // For each enemy in that row...
         for (int enemy = 0; enemy < enemiesPerRow; enemy++)
         {
-            // A ternary operator that basically says: If the last enemy was a bulldog, make the next enemy a tiger
-            enemyType ? enemies_.emplace_back(textures_["bulldog"], textures_["bulldog"].getSize().x * enemy,
-                                              bottomBound - textures_["bulldog"].getSize().y * row, marchType)
-                      : enemies_.emplace_back(textures_["tiger"], textures_["tiger"].getSize().x * enemy,
-                                              bottomBound - textures_["tiger"].getSize().y * row, marchType);
+            // A ternary operator that says: If the last enemy was a bulldog, make the next enemy a tiger. Had
+            // to static_cast to a float so the compiler knew the conversion was intentional
+
+            enemyType
+                ? enemies_.emplace_back(
+                      textures_["bulldog"], static_cast<float>(textures_["bulldog"].getSize().x * enemy),
+                      static_cast<float>(bottomBound - textures_["bulldog"].getSize().y * row), marchType)
+                : enemies_.emplace_back(textures_["tiger"], static_cast<float>(textures_["tiger"].getSize().x * enemy),
+                                        static_cast<float>(bottomBound - textures_["tiger"].getSize().y * row),
+                                        marchType);
 
             // Flip the enemy type for the next enemy
             enemyType = !enemyType;

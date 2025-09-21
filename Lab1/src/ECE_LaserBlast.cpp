@@ -11,7 +11,7 @@ ECE_LaserBlast::ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, boo
     setPosition(xPos, yPos);
 
     // Set scale based on image size
-    setScale(0.1, 0.1);
+    setScale(0.1f, 0.1f);
 
     // Set alignment based on input alignment
     isFriendly_ = isFriendly;
@@ -20,7 +20,7 @@ ECE_LaserBlast::ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, boo
     if (!isFriendly_)
     {
         // Rotate 180 degrees facing upwards
-        setRotation(180);
+        setRotation(180.0f);
     }
 }
 
@@ -29,12 +29,12 @@ void ECE_LaserBlast::propagate()
     // If the blast came from buzzy, it should travel downwards toward the enemies
     if (isFriendly_)
     {
-        move(0, buzzySpeed * 2);
+        move(0, buzzySpeed * 2.0f);
     }
     // Otherwise, it should travel upwards toward buzzy
     else
     {
-        move(0, -buzzySpeed * 2);
+        move(0, -buzzySpeed * 2.0f);
     }
 
     // Check if the laser exceeded the bounds of the window. If so...

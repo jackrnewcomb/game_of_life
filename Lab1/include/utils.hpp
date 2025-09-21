@@ -25,10 +25,10 @@ const int topBound = 0;
 const int bottomBound = 1030;
 
 // A default speed for buzzy based on play-testing
-const double buzzySpeed = 0.1;
+const float buzzySpeed = 0.1f;
 
 // The odds of a random blast occuring for an enemy. Based on play-testing
-const int randomBlastProbability = 1e6;
+const int randomBlastProbability = static_cast<int>(1e6);
 
 /**
  * @brief Provides enum values for possible enemy marching direction
