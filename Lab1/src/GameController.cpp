@@ -10,9 +10,13 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
     textures_["laser"].loadFromFile("graphics/Laser_blast.png");
     textures_["bulldog"].loadFromFile("graphics/bulldog.png");
     textures_["tiger"].loadFromFile("graphics/clemson_tigers.png");
+    textures_["buzzy"].loadFromFile("graphics/Buzzy_blue.png");
 
     // set initial background
     background_.setTexture(textures_["blank"]);
+
+    // Add buzzy to the buzzies_ list
+    buzzies_.emplace_back(textures_["buzzy"]);
 
     addEnemies();
 }
@@ -33,19 +37,19 @@ void GameController::update()
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            buzzy_.move(-buzzySpeed);
+            buzzies_.front().move(-buzzySpeed);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            buzzy_.move(buzzySpeed);
+            buzzies_.front().move(buzzySpeed);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressedRecently_)
         {
 
-            auto xPos = buzzy_.getPosition().x + buzzy_.getGlobalBounds().width / 2.0;
-            auto yPos = buzzy_.getGlobalBounds().top + buzzy_.getGlobalBounds().height;
+            auto xPos = buzzies_.front().getPosition().x + buzzies_.front().getGlobalBounds().width / 2.0;
+            auto yPos = buzzies_.front().getGlobalBounds().top + buzzies_.front().getGlobalBounds().height;
             lasers_.emplace_back(textures_["laser"], xPos, yPos, true);
         }
         spacePressedRecently_ = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
@@ -60,14 +64,7 @@ void GameController::update()
                 lasers_.emplace_back(textures_["laser"], xPos, yPos, false);
             }
 
-            if (!enemy->getSurvivalStatus())
-            {
-                enemy = enemies_.erase(enemy);
-            }
-            else
-            {
-                ++enemy;
-            }
+            ++enemy;
         }
 
         // --- Update lasers and handle collisions ---
@@ -90,13 +87,13 @@ void GameController::update()
                 }
             }
 
-            if (laser->getGlobalBounds().intersects(buzzy_.getGlobalBounds()) && !laser->isFriendly())
+            if (laser->getGlobalBounds().intersects(buzzies_.front().getGlobalBounds()) && !laser->isFriendly())
             {
                 isRunning_ = false;
                 gameFinished_ = true;
             }
 
-            if (hit || !laser->getTravelStatus())
+            if (hit || !laser->isInBounds())
                 laser = lasers_.erase(laser);
             else
                 ++laser;
@@ -116,7 +113,7 @@ void GameController::redraw()
 {
     window_->clear();
     window_->draw(background_);
-    window_->draw(buzzy_);
+    window_->draw(buzzies_.front());
 
     for (auto &enemy : enemies_)
     {

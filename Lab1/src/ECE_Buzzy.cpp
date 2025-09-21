@@ -2,16 +2,8 @@
 #include "utils.hpp"
 #include <iostream>
 
-ECE_Buzzy::ECE_Buzzy()
+ECE_Buzzy::ECE_Buzzy(sf::Texture &texture)
 {
-    if (textureLoaded == false)
-    {
-        if (!texture.loadFromFile("graphics/Buzzy_blue.png"))
-        {
-            std::cout << "Failed to load texture\n";
-        }
-        textureLoaded = true;
-    }
     setTexture(texture);
     setPosition(rightBound / 2, 100);
     setScale(0.25, 0.25);

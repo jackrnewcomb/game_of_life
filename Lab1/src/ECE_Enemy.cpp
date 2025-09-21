@@ -11,43 +11,36 @@ ECE_Enemy::ECE_Enemy(sf::Texture &texture, float xPos, float yPos, MarchDirectio
 
 void ECE_Enemy::march()
 {
-    if (isAlive)
+
+    auto pos = getPosition();
+    auto bounds = getGlobalBounds();
+
+    switch (marchDirection_)
     {
-        auto pos = getPosition();
-        auto bounds = getGlobalBounds();
-
-        switch (marchDirection_)
+    case MarchDirection::Left:
+        move(-buzzySpeed / 2, 0);
+        if (pos.x <= 0)
         {
-        case MarchDirection::Left:
-            move(-buzzySpeed / 2, 0);
-            if (pos.x <= 0)
-            {
-                marchDirection_ = MarchDirection::Up;
-            }
-            break;
-
-        case MarchDirection::Right:
-            move(buzzySpeed / 2, 0);
-            if (pos.x + bounds.width >= rightBound)
-            {
-                marchDirection_ = MarchDirection::Up;
-            }
-            break;
-
-        case MarchDirection::Up:
-            move(0, -bounds.height);
-            marchDirection_ = (pos.x <= 0) ? MarchDirection::Right : MarchDirection::Left;
-            break;
-
-        default:
-            break;
+            marchDirection_ = MarchDirection::Up;
         }
-    }
-}
+        break;
 
-bool ECE_Enemy::getSurvivalStatus()
-{
-    return isAlive;
+    case MarchDirection::Right:
+        move(buzzySpeed / 2, 0);
+        if (pos.x + bounds.width >= rightBound)
+        {
+            marchDirection_ = MarchDirection::Up;
+        }
+        break;
+
+    case MarchDirection::Up:
+        move(0, -bounds.height);
+        marchDirection_ = (pos.x <= 0) ? MarchDirection::Right : MarchDirection::Left;
+        break;
+
+    default:
+        break;
+    }
 }
 
 bool ECE_Enemy::randomBlast()

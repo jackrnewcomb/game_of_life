@@ -17,10 +17,15 @@ collision, laser firings, etc.
 class ECE_Buzzy : public sf::Sprite
 {
   public:
-    ECE_Buzzy();
-    void move(float offsetX);
+    /**
+     * @brief Constructor. Sets attributes of the sprite like texture, scale, position, etc.
+     * @param A sf::Texture&
+     */
+    ECE_Buzzy(sf::Texture &texture);
 
-  private:
-    sf::Texture texture;
-    bool textureLoaded{false};
+    /**
+     * @brief Defines movement logic for buzzy
+     * @params The movement offset
+     */
+    void move(float offsetX);
 };

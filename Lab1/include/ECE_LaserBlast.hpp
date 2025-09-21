@@ -35,10 +35,23 @@ class ECE_LaserBlast : public sf::Sprite
      * @brief Defines movement logic for the laser blast
      */
     void propagate();
-    bool getTravelStatus();
+
+    /**
+     * @brief Returns a bool based on the alignment of the laser blast
+     * @returns True if the laser originated from buzzy, false if the laser originated from an enemy
+     */
     bool isFriendly();
 
+    /**
+     * @brief Returns a bool describing whether the laser is within the bounds of the window
+     * @returns True if in bounds, false otherwise
+     */
+    bool isInBounds();
+
   private:
-    bool isTraveling{false};
+    // Describes whether the laser object is within the bounds of the window
+    bool isInBounds_{true};
+
+    // Describes whether the laser originated from buzzy (true) or from an enemy (false)
     bool isFriendly_{false};
 };

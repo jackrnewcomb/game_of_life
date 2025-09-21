@@ -67,8 +67,8 @@ class GameController
     // A map of string descriptors to textures. Ensures we don't waste time reloading textures
     std::map<std::string, sf::Texture> textures_;
 
-    // The buzzy entity
-    ECE_Buzzy buzzy_;
+    // Making this a std::list for conceptual symmetry with the other entities, but should only have 1 element
+    std::list<ECE_Buzzy> buzzies_;
 
     // A list of all active lasers
     std::list<ECE_LaserBlast> lasers_;
