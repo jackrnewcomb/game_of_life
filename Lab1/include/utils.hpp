@@ -10,3 +10,12 @@ const int bottomBound = 1030;
 
 const int xLen = 1152;
 const int yLen = 1030;
+
+const double buzzySpeed = 0.1;
+
+enum class MarchDirection
+{
+    Left,
+    Right,
+    Up
+};

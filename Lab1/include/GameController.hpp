@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ECE_Buzzy.hpp"
+#include "ECE_Enemy.hpp"
 #include "ECE_LaserBlast.hpp"
 #include "SFML/Graphics.hpp"
+#include "utils.hpp"
 #include <list>
 
 class GameController
@@ -10,7 +12,6 @@ class GameController
   public:
     GameController(std::shared_ptr<sf::RenderWindow> window);
     bool update();
-    void setIsRunning(const bool &update);
     void redraw();
 
   private:
@@ -20,4 +21,5 @@ class GameController
     ECE_Buzzy buzzy_;
     std::list<ECE_LaserBlast> lasers_;
     sf::Sprite background_;
+    std::list<ECE_Enemy> enemies_;
 };
