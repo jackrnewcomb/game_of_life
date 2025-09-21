@@ -29,16 +29,16 @@ void ECE_LaserBlast::propagate()
     // If the blast came from buzzy, it should travel downwards toward the enemies
     if (isFriendly_)
     {
-        move(0, buzzySpeed * 2.0f);
+        move(0, kBuzzySpeed * 2.0f);
     }
     // Otherwise, it should travel upwards toward buzzy
     else
     {
-        move(0, -buzzySpeed * 2.0f);
+        move(0, -kBuzzySpeed * 2.0f);
     }
 
     // Check if the laser exceeded the bounds of the window. If so...
-    if (getPosition().y > bottomBound || getPosition().y < topBound)
+    if (getPosition().y > kBottomBound || getPosition().y < kTopBound)
     {
         // Set the bounds flag to false so it can be destructed by the game controller
         isInBounds_ = false;

@@ -13,22 +13,24 @@ travel speeds, etc.
 #pragma once
 
 // The left pixel bound of the window
-const int leftBound = 0;
+const int kLeftBound = 0;
 
 // The right pixel bound of the window
-const int rightBound = 1152;
+const int kRightBound = 1152;
 
 // The top pixel bound of the window
-const int topBound = 0;
+const int kTopBound = 0;
 
 // The bottom pixel bound of the window
-const int bottomBound = 1030;
+const int kBottomBound = 1030;
 
 // A default speed for buzzy based on play-testing
-const float buzzySpeed = 0.1f;
+const float kBuzzySpeed = 0.1f;
 
 // The odds of a random blast occuring for an enemy. Based on play-testing
-const int randomBlastProbability = static_cast<int>(1e6);
+const int kRandomBlastProbability = static_cast<int>(1e6);
+
+const int kEnemyRows = 2; // Developer preference based on play-tests and performance
 
 /**
  * @brief Provides enum values for possible enemy marching direction

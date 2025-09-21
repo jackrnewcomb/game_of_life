@@ -18,6 +18,7 @@ updating all entities in the game on a frame-to-frame basis.
 #include "SFML/Graphics.hpp"
 #include "utils.hpp"
 #include <list>
+#include <memory>
 
 /**
  * @brief A class for managing game-play flow and interactions between entities

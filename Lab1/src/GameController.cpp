@@ -43,13 +43,13 @@ void GameController::update()
         // If the user presses the left key, move buzzy left
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            buzzies_.front().move(-buzzySpeed);
+            buzzies_.front().move(-kBuzzySpeed);
         }
 
         // If the user presses the right key, move buzzy right
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            buzzies_.front().move(buzzySpeed);
+            buzzies_.front().move(kBuzzySpeed);
         }
 
         // Slightly more complicated logic for laser firing. The spacePressedRecently_ member tracks whether the space
@@ -72,36 +72,36 @@ void GameController::update()
         spacePressedRecently_ = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
         // For each enemy in the active enemies_ list...
-        for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
+        for (auto &enemy : enemies_)
         {
             // Update based on marching movement logic
-            enemy->march();
+            enemy.march();
 
             // Check if this enemy should fire a random laser blast. If so...
-            if (enemy->randomBlast())
+            if (enemy.randomBlast())
             {
                 // Find the ideal x position of the laser (centered at the enemy)
-                auto xPos = enemy->getPosition().x + enemy->getGlobalBounds().width / 2.0f;
+                auto xPos = enemy.getPosition().x + enemy.getGlobalBounds().width / 2.0f;
 
                 // Find the ideal y position of the laer (just above the enemy)
-                auto yPos = enemy->getGlobalBounds().top;
+                auto yPos = enemy.getGlobalBounds().top;
 
                 // Add the laser to the lasers_ list
                 lasers_.emplace_back(textures_["laser"], xPos, yPos, false);
             }
 
             // Check a lose condition: Has any enemy made it to buzzy?
-            if (enemy->getGlobalBounds().intersects(buzzies_.front().getGlobalBounds()))
+            if (enemy.getGlobalBounds().intersects(buzzies_.front().getGlobalBounds()))
             {
                 // Reset the game
                 isRunning_ = false;
                 gameFinished_ = true;
             }
-
-            ++enemy;
         }
 
         // This block will handle collision interactions between lasers and entities. For each laser...
+        // (Need to use iterators to loop through this block because we are potentially erasing objects from the list,
+        // and we need an iterator to do that)
         for (auto laser = lasers_.begin(); laser != lasers_.end();)
         {
             // Propagate laser movements
@@ -110,6 +110,8 @@ void GameController::update()
             bool hit = false;
 
             // For each enemy in the active enemies_ list...
+            // (Need to use iterators to loop through this block because we are potentially erasing objects from the
+            // list, and we need an iterator to do that)
             for (auto enemy = enemies_.begin(); enemy != enemies_.end();)
             {
                 // If the laser intersects with the enemy, and originated from buzzy...
@@ -198,11 +200,8 @@ bool GameController::isGameFinished()
 
 void GameController::addEnemies()
 {
-    // Developer preference based on play-tests
-    int rows = 3;
-
     // Fill the rows with as many enemies as can fit
-    int enemiesPerRow = (rightBound / textures_["bulldog"].getSize().x);
+    int enemiesPerRow = (kRightBound / textures_["bulldog"].getSize().x);
 
     // A flag to flip enemy types
     bool enemyType = false;
@@ -211,7 +210,7 @@ void GameController::addEnemies()
     MarchDirection marchType = MarchDirection::Left;
 
     // For each row...
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; row < kEnemyRows; row++)
     {
         // For each enemy in that row...
         for (int enemy = 0; enemy < enemiesPerRow; enemy++)
@@ -222,9 +221,9 @@ void GameController::addEnemies()
             enemyType
                 ? enemies_.emplace_back(
                       textures_["bulldog"], static_cast<float>(textures_["bulldog"].getSize().x * enemy),
-                      static_cast<float>(bottomBound - textures_["bulldog"].getSize().y * row), marchType)
+                      static_cast<float>(kBottomBound - textures_["bulldog"].getSize().y * row), marchType)
                 : enemies_.emplace_back(textures_["tiger"], static_cast<float>(textures_["tiger"].getSize().x * enemy),
-                                        static_cast<float>(bottomBound - textures_["tiger"].getSize().y * row),
+                                        static_cast<float>(kBottomBound - textures_["tiger"].getSize().y * row),
                                         marchType);
 
             // Flip the enemy type for the next enemy

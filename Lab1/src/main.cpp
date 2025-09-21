@@ -2,12 +2,13 @@
 #include "GameController.hpp"
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 int main()
 {
     // Generate the window. Make it a shared_ptr so the game controller can share ownership
 
-    sf::VideoMode vm(rightBound, bottomBound); // Dimensions of the Start_Screen.png
+    sf::VideoMode vm(kRightBound, kBottomBound); // Dimensions of the Start_Screen.png
 
     std::shared_ptr<sf::RenderWindow> window =
         std::make_shared<sf::RenderWindow>(vm, "Buzzy Defender", sf::Style::Default);

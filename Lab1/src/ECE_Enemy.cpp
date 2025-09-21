@@ -26,7 +26,7 @@ void ECE_Enemy::march()
     // If we are marching left...
     case MarchDirection::Left:
         // Move left, at half buzzy's speed
-        move(-buzzySpeed / 2.0f, 0);
+        move(-kBuzzySpeed / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
         if (pos.x <= 0)
@@ -38,10 +38,10 @@ void ECE_Enemy::march()
     // If we are marching right...
     case MarchDirection::Right:
         // Move right, at half buzzy's speed
-        move(buzzySpeed / 2.0f, 0);
+        move(kBuzzySpeed / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
-        if (pos.x + bounds.width >= rightBound)
+        if (pos.x + bounds.width >= kRightBound)
         {
             marchDirection_ = MarchDirection::Up;
         }
@@ -61,7 +61,7 @@ void ECE_Enemy::march()
 bool ECE_Enemy::randomBlast()
 {
     // Generate a random number between 0 and the blast probability int
-    int randomNum = rand() % randomBlastProbability;
+    int randomNum = rand() % kRandomBlastProbability;
 
     // Blast if the randomly generated number is 0
     if (randomNum == 0)
