@@ -39,9 +39,10 @@ class ECE_Enemy : public sf::Sprite
 
     /**
      * @brief Provides logic for determining if a random blast should be sent
+     * @params A time delta to make blasting framerate-agnostic
      * @returns True if a blast should be sent at this timestep, false otherwise
      */
-    bool randomBlast();
+    bool randomBlast(float &deltaSeconds);
 
   private:
     // The current marching direction of the enemy (Right, Left, or Up)

@@ -81,7 +81,7 @@ void GameController::update()
             enemy.march(deltaSeconds);
 
             // Check if this enemy should fire a random laser blast. If so...
-            if (enemy.randomBlast())
+            if (enemy.randomBlast(deltaSeconds))
             {
                 // Find the ideal x position of the laser (centered at the enemy)
                 auto xPos = enemy.getPosition().x + enemy.getGlobalBounds().width / 2.0f;

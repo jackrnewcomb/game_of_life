@@ -58,19 +58,15 @@ void ECE_Enemy::march(float &deltaSeconds)
     }
 }
 
-bool ECE_Enemy::randomBlast()
+bool ECE_Enemy::randomBlast(float &deltaSeconds)
 {
-    // Generate a random number between 0 and the blast probability int
-    int randomNum = rand() % kRandomBlastProbability;
-
-    // Blast if the randomly generated number is 0
-    if (randomNum == 0)
+    // Randomization logic for enemy firing. Basically, pick a random float between 0 and 1 (std::rand() generates, then
+    // divide by the max possible randomly generated value). Then check if thats less than our firing probability. The
+    // deltaSeconds factor is also included to ensure framerate agnosticism
+    if (static_cast<float>(std::rand()) / RAND_MAX < kFireChancePerSecond * deltaSeconds)
     {
         return true;
     }
-    // Otherwise, don't blast
-    else
-    {
-        return false;
-    }
+
+    return false;
 }

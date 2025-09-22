@@ -32,6 +32,9 @@ const int kRandomBlastProbability = static_cast<int>(1e6);
 
 const int kEnemyRows = 2; // Developer preference based on play-tests and performance
 
+const float kFireChancePerSecond =
+    0.1f; // Odds of each enemy firing on any given second. Developer preference based on play-tests
+
 /**
  * @brief Provides enum values for possible enemy marching direction
  * @return Left, Right, or Up
