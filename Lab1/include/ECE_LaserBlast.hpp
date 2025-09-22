@@ -33,8 +33,9 @@ class ECE_LaserBlast : public sf::Sprite
 
     /**
      * @brief Defines movement logic for the laser blast
+     * @params A time delta to make movement framerate-agnostic
      */
-    void propagate();
+    void propagate(float &deltaSeconds);
 
     /**
      * @brief Returns a bool based on the alignment of the laser blast

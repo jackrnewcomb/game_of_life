@@ -25,7 +25,7 @@ const int kTopBound = 0;
 const int kBottomBound = 1030;
 
 // A default speed for buzzy based on play-testing
-const float kBuzzySpeed = 0.1f;
+const float kBuzzySpeed = 200.0f;
 
 // The odds of a random blast occuring for an enemy. Based on play-testing
 const int kRandomBlastProbability = static_cast<int>(1e6);

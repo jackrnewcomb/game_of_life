@@ -25,6 +25,9 @@ GameController::GameController(std::shared_ptr<sf::RenderWindow> window)
 
 void GameController::update()
 {
+    // Update the clock
+    float deltaSeconds = clock_.restart().asSeconds();
+
     // If the user presses escape, end the window and game
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
@@ -43,13 +46,13 @@ void GameController::update()
         // If the user presses the left key, move buzzy left
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            buzzies_.front().move(-kBuzzySpeed);
+            buzzies_.front().move(-kBuzzySpeed * deltaSeconds);
         }
 
         // If the user presses the right key, move buzzy right
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            buzzies_.front().move(kBuzzySpeed);
+            buzzies_.front().move(kBuzzySpeed * deltaSeconds);
         }
 
         // Slightly more complicated logic for laser firing. The spacePressedRecently_ member tracks whether the space
@@ -75,7 +78,7 @@ void GameController::update()
         for (auto &enemy : enemies_)
         {
             // Update based on marching movement logic
-            enemy.march();
+            enemy.march(deltaSeconds);
 
             // Check if this enemy should fire a random laser blast. If so...
             if (enemy.randomBlast())
@@ -105,7 +108,7 @@ void GameController::update()
         for (auto laser = lasers_.begin(); laser != lasers_.end();)
         {
             // Propagate laser movements
-            laser->propagate();
+            laser->propagate(deltaSeconds);
 
             bool hit = false;
 

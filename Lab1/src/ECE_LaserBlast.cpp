@@ -24,17 +24,17 @@ ECE_LaserBlast::ECE_LaserBlast(sf::Texture &texture, float xPos, float yPos, boo
     }
 }
 
-void ECE_LaserBlast::propagate()
+void ECE_LaserBlast::propagate(float& deltaSeconds)
 {
     // If the blast came from buzzy, it should travel downwards toward the enemies
     if (isFriendly_)
     {
-        move(0, kBuzzySpeed * 2.0f);
+        move(0, kBuzzySpeed * deltaSeconds * 2.0f);
     }
     // Otherwise, it should travel upwards toward buzzy
     else
     {
-        move(0, -kBuzzySpeed * 2.0f);
+        move(0, -kBuzzySpeed * deltaSeconds * 2.0f);
     }
 
     // Check if the laser exceeded the bounds of the window. If so...

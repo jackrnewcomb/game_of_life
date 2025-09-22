@@ -33,8 +33,9 @@ class ECE_Enemy : public sf::Sprite
 
     /**
      * @brief Defines marching (movement) logic for the enemy
+     * @params A time delta to make movement framerate-agnostic
      */
-    void march();
+    void march(float &deltaSeconds);
 
     /**
      * @brief Provides logic for determining if a random blast should be sent

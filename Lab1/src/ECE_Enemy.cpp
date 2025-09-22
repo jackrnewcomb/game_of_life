@@ -14,7 +14,7 @@ ECE_Enemy::ECE_Enemy(sf::Texture &texture, float xPos, float yPos, MarchDirectio
     marchDirection_ = marchDirection;
 }
 
-void ECE_Enemy::march()
+void ECE_Enemy::march(float &deltaSeconds)
 {
     // Get the current position and global rectangle bounds of the enemy
     auto pos = getPosition();
@@ -26,7 +26,7 @@ void ECE_Enemy::march()
     // If we are marching left...
     case MarchDirection::Left:
         // Move left, at half buzzy's speed
-        move(-kBuzzySpeed / 2.0f, 0);
+        move(-kBuzzySpeed * deltaSeconds / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
         if (pos.x <= 0)
@@ -38,7 +38,7 @@ void ECE_Enemy::march()
     // If we are marching right...
     case MarchDirection::Right:
         // Move right, at half buzzy's speed
-        move(kBuzzySpeed / 2.0f, 0);
+        move(kBuzzySpeed * deltaSeconds / 2.0f, 0);
 
         // If we hit the wall, set movement direction to Up
         if (pos.x + bounds.width >= kRightBound)

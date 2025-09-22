@@ -82,4 +82,7 @@ class GameController
 
     // Tracks whether the game has finished
     bool gameFinished_{false};
+
+    // A clock to ensure the game is framerate-independent
+    sf::Clock clock_;
 };
