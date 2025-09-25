@@ -14,7 +14,7 @@ Grid::Grid(int xLen, int yLen)
     }
 }
 
-void Grid::update(int numThreads = 1)
+void Grid::update()
 {
     auto cellsCopy = cells_;
     int rows = cellsCopy.size();

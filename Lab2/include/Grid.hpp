@@ -7,7 +7,7 @@ class Grid
 {
   public:
     Grid(int xLen, int yLen);
-    void update(int numThreads = 1);
+    void update();
     std::vector<std::vector<bool>> getCells()
     {
         return cells_;

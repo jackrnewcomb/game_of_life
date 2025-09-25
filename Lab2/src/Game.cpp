@@ -4,6 +4,7 @@ Game::Game(int xWin, int yWin, int cellSize)
 {
     vm_ = std::make_shared<sf::VideoMode>(xWin, yWin);
     window_ = std::make_shared<sf::RenderWindow>(*vm_, "Game of Life", sf::Style::Default);
+    cellSize_ = cellSize;
     grid_ = std::make_shared<Grid>(xWin / cellSize, yWin / cellSize);
 
     int xPixelsPerCell = cellSize;
@@ -14,28 +15,9 @@ Game::Game(int xWin, int yWin, int cellSize)
 
     textures_["dead"].loadFromFile("graphics/dead.png");
     textures_["alive"].loadFromFile("graphics/alive.png");
-
-    auto test = grid_->getCells();
-    for (auto &col : test)
-    {
-        std::vector<sf::Sprite> spriteCol;
-        for (auto &cell : col)
-        {
-            auto uh = sf::Sprite();
-
-            cell ? uh.setTexture(textures_["alive"]) : uh.setTexture(textures_["dead"]);
-            uh.setPosition(runningX, runningY);
-            uh.setScale(xPixelsPerCell / 100.f, yPixelsPerCell / 100.f); // ????
-            runningY += yPixelsPerCell;
-            spriteCol.emplace_back(uh);
-        }
-        cells_.emplace_back(spriteCol);
-        runningY = 0;
-        runningX += xPixelsPerCell;
-    }
 }
 
-void Game::update(int numThreads = 1)
+void Game::update()
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
@@ -45,33 +27,21 @@ void Game::update(int numThreads = 1)
 
     grid_->update();
 
-    auto test = grid_->getCells();
-    for (int i = 0; i < cells_.size(); i++)
-    {
-        for (int j = 0; j < cells_.at(0).size(); j++)
-        {
-            test.at(i).at(j) ? cells_.at(i).at(j).setTexture(textures_["alive"])
-                             : cells_.at(i).at(j).setTexture(textures_["dead"]);
-        }
-    }
-
     // Redraw the map with new movements and entity updates
-    redraw();
-}
-
-void Game::redraw()
-{
-    // First clear the previous drawing
     window_->clear();
 
-    for (auto &col : cells_)
+    auto &cells = grid_->getCells();
+    for (int i = 0; i < cells.size(); i++)
     {
-        for (auto cell : col)
+        for (int j = 0; j < cells[i].size(); j++)
         {
-            window_->draw(cell);
+            sf::Sprite sprite;
+            sprite.setTexture(cells[i][j] ? textures_["alive"] : textures_["dead"]);
+            sprite.setPosition(i * cellSize_, j * cellSize_);
+            sprite.setScale(cellSize_ / 100.f, cellSize_ / 100.f); //???
+            window_->draw(sprite);
         }
     }
 
-    // Display the drawings
     window_->display();
 }

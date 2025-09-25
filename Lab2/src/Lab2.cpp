@@ -43,11 +43,17 @@ int main(int argc, char *argv[])
 
     // Testing
 
-    Game game(std::stoi(argMap["-x"]), std::stoi(argMap["-y"]), std::stoi(argMap["-c"]));
+    auto xWindowSize = std::stoi(argMap["-x"]);
+    auto yWindowSize = std::stoi(argMap["-y"]);
+    auto cellSize = std::stoi(argMap["-c"]);
+
+    Game game(xWindowSize, yWindowSize, cellSize);
+    Grid grid(xWindowSize / cellSize, yWindowSize / cellSize);
 
     // General execution loop. Each iteration represents a playthrough of the game
     while (game.isRunning())
     {
+        grid.update();
         game.update();
     }
 
