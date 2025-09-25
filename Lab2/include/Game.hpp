@@ -13,6 +13,11 @@ class Game
         return isRunning_;
     }
 
+    std::shared_ptr<Grid> getGrid()
+    {
+        return grid_;
+    }
+
   private:
     std::shared_ptr<sf::VideoMode> vm_;
 

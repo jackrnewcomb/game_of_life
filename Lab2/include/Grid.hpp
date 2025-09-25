@@ -1,13 +1,17 @@
 #pragma once
 
 #include <random>
+#include <thread>
 #include <vector>
 
 class Grid
 {
   public:
     Grid(int xLen, int yLen);
-    void update();
+    void updateCell(int i, int j, const std::vector<std::vector<bool>> &cellsCopy, int rows, int cols);
+    void updateSEQ();
+    void updateTHRD(int numThreads);
+    void updateMP();
     std::vector<std::vector<bool>> getCells()
     {
         return cells_;

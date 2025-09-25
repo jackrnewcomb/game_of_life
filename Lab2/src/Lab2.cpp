@@ -48,13 +48,32 @@ int main(int argc, char *argv[])
     auto cellSize = std::stoi(argMap["-c"]);
 
     Game game(xWindowSize, yWindowSize, cellSize);
-    Grid grid(xWindowSize / cellSize, yWindowSize / cellSize);
+    auto grid = game.getGrid();
 
+    int tracker = 0;
+    auto start_time = std::chrono::steady_clock::now();
     // General execution loop. Each iteration represents a playthrough of the game
     while (game.isRunning())
     {
-        grid.update();
+        if (argMap["-t"] == "SEQ")
+        {
+            grid->updateSEQ();
+        }
+        else if (argMap["-t"] == "THRD")
+        {
+            grid->updateTHRD(std::stoi(argMap["-n"]));
+        }
         game.update();
+
+        tracker++;
+
+        if (tracker % 100)
+        {
+            auto end_time = std::chrono::steady_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end_time - start_time;
+            start_time = std::chrono::steady_clock::now();
+            std::cout << "100 generations took " << elapsed_seconds.count() << " with style " << argMap["-t"] << "\n";
+        }
     }
 
     return 0;

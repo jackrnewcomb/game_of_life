@@ -25,8 +25,6 @@ void Game::update()
         window_->close();
     }
 
-    grid_->update();
-
     // Redraw the map with new movements and entity updates
     window_->clear();
 
