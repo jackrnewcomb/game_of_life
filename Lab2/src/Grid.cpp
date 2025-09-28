@@ -12,24 +12,25 @@ Grid::Grid(int xLen, int yLen)
         }
         cells_.emplace_back(col);
     }
+    newCells_ = cells_;
 }
 
 void Grid::updateSEQ()
 {
-    auto cellsCopy = cells_;
-    int rows = cellsCopy.size();
-    int cols = cellsCopy.at(0).size();
+    int rows = cells_.size();
+    int cols = cells_.at(0).size();
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            updateCell(i, j, cellsCopy, rows, cols);
+            updateCell(i, j, rows, cols);
         }
     }
+    cells_.swap(newCells_);
 }
 
-void Grid::updateCell(int i, int j, const std::vector<std::vector<bool>> &cellsCopy, int rows, int cols)
+void Grid::updateCell(int i, int j, int rows, int cols)
 {
     int livingNeighbors = 0;
 
@@ -47,40 +48,39 @@ void Grid::updateCell(int i, int j, const std::vector<std::vector<bool>> &cellsC
             // Boundary check
             if (ni >= 0 && ni < rows && nj >= 0 && nj < cols)
             {
-                if (cellsCopy[ni][nj]) // assuming bool or 0/1
+                if (cells_[ni][nj]) // assuming bool or 0/1
                     livingNeighbors++;
             }
         }
     }
 
     // life giveth and life taketh away
-    if (cellsCopy.at(i).at(j) == true)
+    if (cells_.at(i).at(j) == true)
     {
         if (livingNeighbors != 2 && livingNeighbors != 3)
         {
-            cells_.at(i).at(j) = false;
+            newCells_.at(i).at(j) = false;
         }
     }
     else
     {
         if (livingNeighbors == 3)
         {
-            cells_.at(i).at(j) = true;
+            newCells_.at(i).at(j) = true;
         }
     }
 }
 void Grid::updateTHRD(int numThreads)
 {
-    auto cellsCopy = cells_;
-    int rows = cellsCopy.size();
-    int cols = cellsCopy.at(0).size();
+    int rows = cells_.size();
+    int cols = cells_.at(0).size();
 
     auto worker = [&](int startRow, int endRow) {
         for (int i = startRow; i < endRow; i++)
         {
             for (int j = 0; j < cols; j++)
             {
-                updateCell(i, j, cellsCopy, rows, cols);
+                updateCell(i, j, rows, cols);
             }
         }
     };
@@ -95,9 +95,24 @@ void Grid::updateTHRD(int numThreads)
     }
     for (auto &th : threads)
         th.join();
+
+    cells_.swap(newCells_);
 }
 void Grid::updateMP()
 {
+    int rows = cells_.size();
+    int cols = cells_[0].size();
+
+    #pragma omp parallel for collapse(2)
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            updateCell(i, j, rows, cols);
+        }
+    }
+
+    cells_.swap(newCells_);
 }
 
 bool Grid::randomStart()
