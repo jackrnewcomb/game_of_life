@@ -1,10 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <omp.h>
 #include <random>
 #include <thread>
 #include <vector>
-#include <omp.h>
-#include <iostream>
 
 class Grid
 {
@@ -14,14 +14,14 @@ class Grid
     void updateSEQ();
     void updateTHRD(int numThreads);
     void updateMP();
-    std::vector<std::vector<bool>> getCells()
+    std::vector<std::vector<char>> getCells()
     {
         return cells_;
     }
 
   private:
-    bool randomStart();
-    std::vector<std::vector<bool>> cells_;
-    std::vector<std::vector<bool>> newCells_;
+    char randomStart();
+    std::vector<std::vector<char>> cells_;
+    std::vector<std::vector<char>> newCells_;
     std::default_random_engine generator;
 };

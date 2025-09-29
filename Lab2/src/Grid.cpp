@@ -5,7 +5,7 @@ Grid::Grid(int xLen, int yLen)
     for (int i = 0; i < xLen; i++)
     {
         // Make a new column
-        std::vector<bool> col;
+        std::vector<char> col;
         for (int j = 0; j < yLen; j++)
         {
             col.emplace_back(randomStart());
@@ -30,7 +30,7 @@ void Grid::updateSEQ()
     cells_.swap(newCells_);
 }
 
-void Grid::updateCell(int i, int j, int rows, int cols)
+inline void Grid::updateCell(int i, int j, int rows, int cols)
 {
     int livingNeighbors = 0;
 
@@ -55,18 +55,18 @@ void Grid::updateCell(int i, int j, int rows, int cols)
     }
 
     // life giveth and life taketh away
-    if (cells_.at(i).at(j) == true)
+    if (cells_.at(i).at(j) == 1)
     {
         if (livingNeighbors != 2 && livingNeighbors != 3)
         {
-            newCells_.at(i).at(j) = false;
+            newCells_.at(i).at(j) = 0;
         }
     }
     else
     {
         if (livingNeighbors == 3)
         {
-            newCells_.at(i).at(j) = true;
+            newCells_.at(i).at(j) = 1;
         }
     }
 }
@@ -103,7 +103,7 @@ void Grid::updateMP()
     int rows = cells_.size();
     int cols = cells_[0].size();
 
-    #pragma omp parallel for collapse(2)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
@@ -115,8 +115,9 @@ void Grid::updateMP()
     cells_.swap(newCells_);
 }
 
-bool Grid::randomStart()
+char Grid::randomStart()
 {
     std::uniform_int_distribution<int> distribution(0, 1);
-    return distribution(generator);
+    auto result = distribution(generator);
+    return static_cast<char>(result);
 }
