@@ -51,17 +51,14 @@ int main(int argc, char *argv[])
     auto yWindowSize = std::stoi(argMap["-y"]);
     auto cellSize = std::stoi(argMap["-c"]);
 
-    // Game game(xWindowSize, yWindowSize, cellSize);
-    // auto grid = game.getGrid();
-    //  just testing
-    std::shared_ptr<Grid> grid = std::make_shared<Grid>(xWindowSize / cellSize, yWindowSize / cellSize);
+    Game game(xWindowSize, yWindowSize, cellSize);
+    auto grid = game.getGrid();
 
     int tracker = 0;
     long long accumulated_us = 0; // total time in microseconds
     auto start_time = std::chrono::steady_clock::now();
     // General execution loop. Each iteration represents a playthrough of the game
-    // while (game.isRunning())
-    while (true)
+    while (game.isRunning())
     {
         auto start_update = std::chrono::steady_clock::now();
         if (argMap["-t"] == "SEQ")
@@ -78,18 +75,15 @@ int main(int argc, char *argv[])
         }
         auto end_update = std::chrono::steady_clock::now();
         accumulated_us += std::chrono::duration_cast<std::chrono::microseconds>(end_update - start_update).count();
-        // game.update();
+        game.update();
 
         tracker++;
 
-        if (tracker % 1 == 0)
+        if (tracker % 100 == 0)
         {
-            std::cout << "1 generations took " << accumulated_us << " with style " << argMap["-t"] << "\n";
+            std::cout << "100 generations took " << accumulated_us << " with style " << argMap["-t"] << "\n";
             accumulated_us = 0; // reset
         }
-
-        // temporarily stopping after one update for debugging
-        return 0;
     }
 
     return 0;

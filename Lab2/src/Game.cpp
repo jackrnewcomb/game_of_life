@@ -29,12 +29,12 @@ void Game::update()
     window_->clear();
 
     auto &cells = grid_->getCells();
-    for (int i = 0; i < cells.size(); i++)
+    for (int i = 0; i < grid_->getRows(); i++)
     {
-        for (int j = 0; j < cells[i].size(); j++)
+        for (int j = 0; j < grid_->getCols(); j++)
         {
             sf::Sprite sprite;
-            sprite.setTexture(cells[i][j] ? textures_["alive"] : textures_["dead"]);
+            sprite.setTexture(cells[grid_->index(i, j)] ? textures_["alive"] : textures_["dead"]);
             sprite.setPosition(i * cellSize_, j * cellSize_);
             sprite.setScale(cellSize_ / 100.f, cellSize_ / 100.f); //???
             window_->draw(sprite);

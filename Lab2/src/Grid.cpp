@@ -2,35 +2,34 @@
 
 Grid::Grid(int xLen, int yLen)
 {
-    for (int i = 0; i < xLen; i++)
+
+    rows_ = xLen;
+    cols_ = yLen;
+
+    cells_.resize(rows_ * cols_);
+    newCells_.resize(rows_ * cols_);
+    for (int i = 0; i < rows_; i++)
     {
-        // Make a new column
-        std::vector<char> col;
-        for (int j = 0; j < yLen; j++)
+        for (int j = 0; j < cols_; j++)
         {
-            col.emplace_back(randomStart());
+            cells_[index(i, j)] = randomStart();
         }
-        cells_.emplace_back(col);
     }
-    newCells_ = cells_;
 }
 
 void Grid::updateSEQ()
 {
-    int rows = cells_.size();
-    int cols = cells_.at(0).size();
-
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < rows_; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (int j = 0; j < cols_; j++)
         {
-            updateCell(i, j, rows, cols);
+            updateCell(i, j);
         }
     }
     cells_.swap(newCells_);
 }
 
-inline void Grid::updateCell(int i, int j, int rows, int cols)
+inline void Grid::updateCell(int i, int j)
 {
     int livingNeighbors = 0;
 
@@ -46,51 +45,44 @@ inline void Grid::updateCell(int i, int j, int rows, int cols)
             int nj = j + jDelta;
 
             // Boundary check
-            if (ni >= 0 && ni < rows && nj >= 0 && nj < cols)
+            if (ni >= 0 && ni < rows_ && nj >= 0 && nj < cols_)
             {
-                if (cells_[ni][nj]) // assuming bool or 0/1
-                    livingNeighbors++;
+                livingNeighbors += cells_[index(ni, nj)];
             }
         }
     }
 
     // life giveth and life taketh away
-    if (cells_.at(i).at(j) == 1)
+    int cur = cells_[index(i, j)];
+    char &next = newCells_[index(i, j)];
+
+    if (cur == 1)
     {
-        if (livingNeighbors != 2 && livingNeighbors != 3)
-        {
-            newCells_.at(i).at(j) = 0;
-        }
+        next = (livingNeighbors == 2 || livingNeighbors == 3) ? 1 : 0;
     }
     else
     {
-        if (livingNeighbors == 3)
-        {
-            newCells_.at(i).at(j) = 1;
-        }
+        next = (livingNeighbors == 3) ? 1 : 0;
     }
 }
 void Grid::updateTHRD(int numThreads)
 {
-    int rows = cells_.size();
-    int cols = cells_.at(0).size();
-
     auto worker = [&](int startRow, int endRow) {
         for (int i = startRow; i < endRow; i++)
         {
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < cols_; j++)
             {
-                updateCell(i, j, rows, cols);
+                updateCell(i, j);
             }
         }
     };
 
     std::vector<std::thread> threads;
-    int chunk = rows / numThreads;
+    int chunk = rows_ / numThreads;
     for (int t = 0; t < numThreads; t++)
     {
         int start = t * chunk;
-        int end = (t == numThreads - 1) ? rows : start + chunk;
+        int end = (t == numThreads - 1) ? rows_ : start + chunk;
         threads.emplace_back(worker, start, end);
     }
     for (auto &th : threads)
@@ -100,16 +92,13 @@ void Grid::updateTHRD(int numThreads)
 }
 void Grid::updateMP()
 {
-    int rows = cells_.size();
-    int cols = cells_[0].size();
 
 #pragma omp parallel for schedule(static)
-    for (int i = 0; i < rows; i++)
+    for (int idx = 0; idx < rows_ * cols_; idx++)
     {
-        for (int j = 0; j < cols; j++)
-        {
-            updateCell(i, j, rows, cols);
-        }
+        int i = idx / cols_;
+        int j = idx % cols_;
+        updateCell(i, j);
     }
 
     cells_.swap(newCells_);
