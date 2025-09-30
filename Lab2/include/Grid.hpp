@@ -48,7 +48,7 @@ class Grid
     /**
      * @brief Updates all cells using OpenMP
      */
-    void updateMP();
+    void updateOMP();
 
     /**
      * @brief Getter

@@ -90,7 +90,7 @@ void Grid::updateTHRD(int numThreads)
 
     cells_.swap(newCells_);
 }
-void Grid::updateMP()
+void Grid::updateOMP()
 {
 
 #pragma omp parallel for schedule(static)
