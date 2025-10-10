@@ -12,6 +12,7 @@ Provides a class that handles the heavy computational work involved in updating 
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <omp.h>
 #include <random>
 #include <thread>
@@ -54,7 +55,7 @@ class Grid
      * @brief Getter
      * @returns Returns the cells_ array
      */
-    std::vector<char> getCells()
+    std::vector<char> &getCells()
     {
         return cells_;
     }
