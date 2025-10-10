@@ -90,6 +90,11 @@ class Grid
         return i * cols_ + j;
     }
 
+    int &getOpenMpThreads()
+    {
+        return openMpThreads_;
+    }
+
   private:
     /**
      * @brief RNG function that provides a "random" assignment to each cell to start
@@ -111,4 +116,7 @@ class Grid
 
     // Random Number Generator
     std::default_random_engine generator;
+
+    // The number of openMP threads (if we are in openMP)
+    int openMpThreads_{-1};
 };

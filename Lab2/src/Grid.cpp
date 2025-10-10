@@ -31,6 +31,7 @@ void Grid::updateSEQ()
             updateCell(i, j);
         }
     }
+    // Swap content so cells_ now holds the most up to date data
     cells_.swap(newCells_);
 }
 
@@ -112,22 +113,23 @@ void Grid::updateTHRD(int numThreads)
     {
         thr.join();
     }
-
+    // Swap content so cells_ now holds the most up to date data
     cells_.swap(newCells_);
 }
 void Grid::updateOMP()
 {
-    // Tells the compiler to parallelize the for loop with multiple threads using openMP.
-    // schedule(static) ensures that iterations are divided into roughly even sized chunks, which is best for when
-    // iterations take roughly the same amount of time
+// Tells the compiler to parallelize the for loop with multiple threads using openMP.
+// schedule(static) ensures that iterations are divided into roughly even sized chunks, which is best for when
+// iterations take roughly the same amount of time
 #pragma omp parallel for schedule(static)
     for (int idx = 0; idx < rows_ * cols_; idx++)
     {
+        openMpThreads_ = omp_get_num_threads();
         int i = idx / cols_;
         int j = idx % cols_;
         updateCell(i, j);
     }
-
+    // Swap content so cells_ now holds the most up to date data
     cells_.swap(newCells_);
 }
 

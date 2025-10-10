@@ -135,7 +135,21 @@ int main(int argc, char *argv[])
         // Print runtime stats every 100 frames
         if (iteration % 100 == 0)
         {
-            std::cout << "100 generations took " << accumulated_us << " with style " << argMap["-t"] << "\n";
+            if (argMap["-t"] == "SEQ")
+            {
+                std::cout << "100 generations took " << accumulated_us << " microseconds with single thread." << "\n";
+            }
+            else if (argMap["-t"] == "THRD")
+            {
+                std::cout << "100 generations took " << accumulated_us << " microseconds with " << argMap["-n"]
+                          << " std::threads." << "\n";
+            }
+            else if (argMap["-t"] == "OMP")
+            {
+                std::cout << "100 generations took " << accumulated_us << " microseconds with "
+                          << grid->getOpenMpThreads() << " OMP threads." << "\n";
+            }
+
             accumulated_us = 0; // reset accumulated_us
         }
     }
