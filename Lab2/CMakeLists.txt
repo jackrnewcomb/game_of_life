@@ -23,6 +23,11 @@ file(GLOB INCLUDES ${PROJECT_SOURCE_DIR}/include/*.hpp)
 # Add the executable
 add_executable(Lab2 ${SOURCES} ${INCLUDES})
 
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+  target_link_libraries(Lab2 PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 target_include_directories(Lab2 PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 include_directories(${PROJECT_SOURCE_DIR}/../SFML/include)
